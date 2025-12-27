@@ -1,2 +1,2 @@
 # Arctic
-Open-Source Identity Platform
+Open-Source Identity and Access Management Platform
