@@ -1,0 +1,17 @@
+# Arctic Configuration
+# Copy this file to config.yaml and update values
+
+server:
+  port: 8080
+
+postgres:
+  host: localhost
+  port: 5432
+  user: root
+  password: toor
+  name: arctic_db
+  sslmode: disable # disable, require, verify-ca, verify-full
+
+log:
+  level: info # debug, info, warn, error
+  format: json # json, text
