@@ -9,23 +9,28 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/V4N1LLA-1CE/arctic/internal/config"
 )
 
 // read the article below if confused on the structure
 //
 // source: https://grafana.com/blog/how-i-write-http-services-in-go-after-13-years/
 func main() {
+	cfg, err := config.Load("")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "config error: %s\n", err)
+		os.Exit(1)
+	}
+
 	ctx := context.Background()
-	if err := run(ctx, os.Getenv); err != nil {
+	if err := run(ctx, cfg); err != nil {
 		fmt.Fprintf(os.Stderr, "Arctic server stopped: %s\n", err)
 		os.Exit(1)
 	}
 }
 
-func run(
-	ctx context.Context,
-	getenv func(string) string,
-) error {
+func run(ctx context.Context, cfg *config.Config) error {
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
 	defer cancel()
 
@@ -35,18 +40,13 @@ func run(
 
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("ok"))
 	})
 
-	port := getenv("PORT")
-	if port == "" {
-		return fmt.Errorf("`PORT` environment variable doesn't exist")
-	}
-
 	srv := &http.Server{
-		Addr:    fmt.Sprintf(":%s", port),
+		Addr:    fmt.Sprintf(":%d", cfg.Server.Port),
 		Handler: mux,
 	}
 
@@ -61,7 +61,7 @@ func run(
 		srv.Shutdown(timeout)
 	}()
 
-	log.Printf("Arctic server starting on port %s...", port)
+	log.Printf("Arctic server starting on port %d...", cfg.Server.Port)
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		return err
 	}
