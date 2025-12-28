@@ -8,15 +8,15 @@
 # the port artic server will run on and
 # can be accessed from
 server:
-  port: 8080
+  port: 9726
 
 # postgresdb source that arctic
 # will connect to
 postgres:
   host: localhost
   port: 5432
-  user: root
-  password: toor
+  user: arctic
+  password: arctic
   name: arctic_db
   sslmode: disable # disable, require, verify-ca, verify-full
 
