@@ -1,0 +1,10 @@
+services:
+  arctic:
+    build: .
+    ports:
+      - "9726:9726"
+    environment:
+      ARCTIC_POSTGRES_HOST: localhost
+      ARCTIC_POSTGRES_USER: arctic
+      ARCTIC_POSTGRES_PASSWORD: arctic
+      ARCTIC_POSTGRES_NAME: arctic_db
