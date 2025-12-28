@@ -1,9 +1,17 @@
 # Arctic Configuration
-# Copy this file to config.yaml and update values
+#
+# copy this file to either:
+# /etc/arctic/config.yml
+# or
+# ~/.arctic/config.yml
 
+# the port artic server will run on and
+# can be accessed from
 server:
   port: 8080
 
+# postgresdb source that arctic
+# will connect to
 postgres:
   host: localhost
   port: 5432
@@ -12,6 +20,8 @@ postgres:
   name: arctic_db
   sslmode: disable # disable, require, verify-ca, verify-full
 
+# log settings in arctic
 log:
   level: info # debug, info, warn, error
   format: json # json, text
+
