@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/V4N1LLA-1CE/arctic/internal/config"
+	"github.com/spf13/viper"
 )
 
 // read the article below if confused on the structure
@@ -23,6 +24,9 @@ func main() {
 		os.Exit(1)
 	}
 
+	log.Printf("config loaded from: %s", viper.ConfigFileUsed())
+	log.Printf("config: %v", cfg)
+
 	ctx := context.Background()
 	if err := run(ctx, cfg); err != nil {
 		fmt.Fprintf(os.Stderr, "Arctic server stopped: %s\n", err)
@@ -33,10 +37,6 @@ func main() {
 func run(ctx context.Context, cfg *config.Config) error {
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
 	defer cancel()
-
-	// load env, verify if any is missing, empty or not there
-
-	// TODO: parse flags, load config, db pool, start server etc
 
 	mux := http.NewServeMux()
 
