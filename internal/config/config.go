@@ -19,8 +19,8 @@ const (
 )
 
 type Config struct {
-	Server ServerConfig `mapstructure:"server" validate:"required"`
-	Log    LogConfig    `mapstructure:"log" validate:"required"`
+	Server *ServerConfig `mapstructure:"server" validate:"required"`
+	Log    *LogConfig    `mapstructure:"log" validate:"required"`
 }
 
 type ServerConfig struct {
