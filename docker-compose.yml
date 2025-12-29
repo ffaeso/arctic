@@ -8,3 +8,5 @@ services:
       ARCTIC_POSTGRES_USER: arctic
       ARCTIC_POSTGRES_PASSWORD: arctic
       ARCTIC_POSTGRES_NAME: arctic_db
+      # override commands here
+    # command: ["start"]

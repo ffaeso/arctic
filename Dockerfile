@@ -20,3 +20,4 @@ EXPOSE 9726
 USER nonroot:nonroot
 
 ENTRYPOINT ["/arctic"]
+CMD ["start"]
