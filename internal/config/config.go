@@ -14,9 +14,9 @@ const (
 	ApplicationName = "Arctic"
 
 	// defaults
-	DefaultHTTPPort     = 9726
-	DefaultLoggerFormat = "json"
-	DefaultLoggerLevel  = "info"
+	DefaultHTTPPort  = 9726
+	DefaultLogFormat = "json"
+	DefaultLogLevel  = "info"
 )
 
 type Config struct {
@@ -81,8 +81,8 @@ func Load(configPath string) (*Config, error) {
 
 func setDefaults(_ *viper.Viper) {
 	viper.SetDefault("server.port", DefaultHTTPPort)
-	viper.SetDefault("log.level", DefaultLoggerLevel)
-	viper.SetDefault("log.format", DefaultLoggerFormat)
+	viper.SetDefault("log.level", DefaultLogLevel)
+	viper.SetDefault("log.format", DefaultLogFormat)
 }
 
 func envOverride(_ *viper.Viper) {
