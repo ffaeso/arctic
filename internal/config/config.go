@@ -4,32 +4,17 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/V4N1LLA-1CE/arctic/internal/database"
+	"github.com/V4N1LLA-1CE/arctic/internal/logger"
+	"github.com/V4N1LLA-1CE/arctic/internal/server"
 	"github.com/go-playground/validator/v10"
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-	Server   ServerConfig   `mapstructure:"server" validate:"required"`
-	Postgres PostgresConfig `mapstructure:"postgres" validate:"required"`
-	Log      LogConfig      `mapstructure:"log" validate:"required"`
-}
-
-type ServerConfig struct {
-	Port int `mapstructure:"port" validate:"required"`
-}
-
-type PostgresConfig struct {
-	Host     string `mapstructure:"host" validate:"required"`
-	Port     int    `mapstructure:"port" validate:"required"`
-	User     string `mapstructure:"user" validate:"required"`
-	Password string `mapstructure:"password" validate:"required"`
-	Name     string `mapstructure:"name" validate:"required"`
-	SSLMode  string `mapstructure:"sslmode" validate:"required"`
-}
-
-type LogConfig struct {
-	Level  string `mapstructure:"level" validate:"required"`
-	Format string `mapstructure:"format" validate:"required"`
+	Server   *server.Config   `mapstructure:"server" validate:"required"`
+	Postgres *database.Config `mapstructure:"postgres" validate:"required"`
+	Log      *logger.Config   `mapstructure:"log" validate:"required"`
 }
 
 func Load(configPath string) (*Config, error) {
@@ -87,11 +72,4 @@ func Load(configPath string) (*Config, error) {
 	}
 
 	return &cfg, nil
-}
-
-func (p *PostgresConfig) DSN() string {
-	return fmt.Sprintf(
-		"postgres://%s:%s@%s:%d/%s?sslmode=%s",
-		p.User, p.Password, p.Host, p.Port, p.Name, p.SSLMode,
-	)
 }
