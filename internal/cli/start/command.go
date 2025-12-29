@@ -1,7 +1,6 @@
 package start
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/ffaeso/arctic/internal/config"
@@ -16,7 +15,7 @@ func NewCommand() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cfg, err := config.Load("")
 			if err != nil {
-				return fmt.Errorf("failed to load config: %w", err)
+				return err
 			}
 
 			log.Printf("%+v", cfg)

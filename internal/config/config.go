@@ -2,7 +2,6 @@ package config
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 
 	"github.com/go-playground/validator"
@@ -62,18 +61,18 @@ func Load(configPath string) (*Config, error) {
 	if err := viper.ReadInConfig(); err != nil {
 		var fileNotFoundErr viper.ConfigFileNotFoundError
 		if !errors.As(err, &fileNotFoundErr) {
-			return nil, fmt.Errorf("unable to read config: %w", err)
+			return nil, err
 		}
 	}
 
 	var cfg Config
 	if err := viper.Unmarshal(&cfg); err != nil {
-		return nil, fmt.Errorf("error parsing config: %w", err)
+		return nil, err
 	}
 
 	v := validator.New()
 	if err := v.Struct(cfg); err != nil {
-		return nil, fmt.Errorf("config values missing: %w", err)
+		return nil, err
 	}
 
 	return &cfg, nil
