@@ -2,18 +2,25 @@ package start
 
 import (
 	"fmt"
+	"log"
 
+	"github.com/ffaeso/arctic/internal/config"
 	"github.com/spf13/cobra"
 )
 
 func NewCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "start",
-		Short: "Start Artic",
+		Short: "Start Arctic",
 		Long:  "Start the Arctic server",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			fmt.Println("starting arctic...")
-			// TODO: load and verify config -> testdb connection -> perform setup (db migrations) -> start server
+			cfg, err := config.Load("")
+			if err != nil {
+				return fmt.Errorf("failed to load config: %w", err)
+			}
+
+			log.Printf("%+v", cfg)
+
 			return nil
 		},
 	}
