@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"strconv"
 
 	"github.com/ffaeso/arctic/internal/config"
 )
@@ -36,6 +35,6 @@ func (s *Server) Serve() error {
 		// TODO: configure more server settings
 	}
 
-	s.Logger.Info("starting arctic server...", "addr", strconv.Itoa(s.Addr))
+	s.Logger.Info("starting arctic server...", "addr", s.Addr)
 	return srv.ListenAndServe()
 }
