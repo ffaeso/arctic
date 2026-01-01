@@ -19,12 +19,12 @@ const (
 )
 
 type Config struct {
-	Server *ServerConfig `mapstructure:"server" validate:"required"`
-	Log    *LogConfig    `mapstructure:"log" validate:"required"`
+	Server ServerConfig `mapstructure:"server" validate:"required"`
+	Log    LogConfig    `mapstructure:"log" validate:"required"`
 }
 
 type ServerConfig struct {
-	Port int `mapstructure:"port" validate:"required,min=1,max=65535"`
+	Addr int `mapstructure:"addr" validate:"required,min=1,max=65535"`
 }
 
 type LogConfig struct {
@@ -79,7 +79,10 @@ func Load(configPath string) (*Config, error) {
 }
 
 func setDefaults(_ *viper.Viper) {
-	viper.SetDefault("server.port", DefaultHTTPPort)
+	// server defaults
+	viper.SetDefault("server.addr", DefaultHTTPPort)
+
+	// logger defaults
 	viper.SetDefault("log.level", DefaultLogLevel)
 	viper.SetDefault("log.format", DefaultLogFormat)
 }
