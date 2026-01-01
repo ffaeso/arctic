@@ -22,7 +22,7 @@ func NewCommand() *cobra.Command {
 			l := logger.New(&cfg.Log)
 			l.Info("loaded config", "config", cfg)
 
-			// instantiate and run arctic server
+			// instantiate server
 			srv := server.New(
 				&cfg.Server,
 				server.Mount(l),
