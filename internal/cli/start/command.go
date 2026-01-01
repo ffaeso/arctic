@@ -25,7 +25,7 @@ func NewCommand() *cobra.Command {
 			// instantiate and run arctic server
 			srv := server.New(
 				&cfg.Server,
-				server.GetRoutes(),
+				server.Mount(l),
 				l,
 			)
 

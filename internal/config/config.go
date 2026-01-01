@@ -13,7 +13,7 @@ const (
 	ApplicationName = "Arctic"
 
 	// defaults
-	DefaultHTTPPort  = 9726
+	DefaultHttpAddr  = 9726
 	DefaultLogFormat = "json"
 	DefaultLogLevel  = "info"
 )
@@ -80,7 +80,7 @@ func Load(configPath string) (*Config, error) {
 
 func setDefaults(_ *viper.Viper) {
 	// server defaults
-	viper.SetDefault("server.addr", DefaultHTTPPort)
+	viper.SetDefault("server.addr", DefaultHttpAddr)
 
 	// logger defaults
 	viper.SetDefault("log.level", DefaultLogLevel)
