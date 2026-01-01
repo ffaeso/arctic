@@ -59,5 +59,6 @@ func (s *Server) Serve() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
+	s.Logger.Info("performing graceful shutdown...")
 	return srv.Shutdown(ctx)
 }
