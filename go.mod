@@ -3,6 +3,7 @@ module github.com/ffaeso/arctic
 go 1.25.5
 
 require (
+	github.com/go-chi/chi/v5 v5.2.3
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/viper v1.21.0

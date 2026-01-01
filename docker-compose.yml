@@ -4,9 +4,5 @@ services:
     ports:
       - "9726:9726"
     environment:
-      ARCTIC_POSTGRES_HOST: localhost
-      ARCTIC_POSTGRES_USER: arctic
-      ARCTIC_POSTGRES_PASSWORD: arctic
-      ARCTIC_POSTGRES_NAME: arctic_db
-      # override commands here
-    # command: ["start"]
+      - ARCTIC_SERVER_PORT=9726
+      - ARCTIC_LOG_FORMAT=text #for dev
