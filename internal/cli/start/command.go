@@ -29,6 +29,7 @@ func NewCommand() *cobra.Command {
 				l,
 			)
 
+			// run server
 			return srv.Serve()
 		},
 	}

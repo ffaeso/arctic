@@ -9,18 +9,23 @@ export ARCTIC_DATASOURCE_PORT ?= 5432
 export ARCTIC_DATASOURCE_DBNAME ?= arctic_dev
 export ARCTIC_DATASOURCE_SSLMODE ?= disable
 
+# hot path -> spins up dependencies (postgres) via 
+# docker compose + runs arctic start
 .PHONY: dev
 dev: deps-up
 	go run ./cmd/arctic start
 
+# builds binary into ./bin/arctic
 .PHONY: build
 build:
 	go build -o ./bin/arctic ./cmd/arctic
 
+# runs the binary built in make build
 .PHONY: run
 run: build
 	./bin/arctic start
 
+# spins up dependencies (postgres)
 .PHONY: deps-up
 deps-up:
 	@docker compose -f build/docker-compose.dev.yml up -d
@@ -47,11 +52,13 @@ cover:
 	go tool cover -html=coverage.out
 	rm coverage.out
 
+# stops running containers, removes it, and remove the volume
 .PHONY: clean
 clean:
 	rm -f bin/
 	docker compose -f build/docker-compose.dev.yml down -v
 
+# help menu
 .PHONY: help
 help:
 	@echo "Arctic Development Makefile"
