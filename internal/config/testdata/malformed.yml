@@ -1,0 +1,6 @@
+log:
+  level: debug
+  invalid yaml here without proper indentation
+    this should cause parse error
+server:
+  - this is a list when it should be an object

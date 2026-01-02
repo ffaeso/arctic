@@ -1,38 +1,12 @@
+//go:build unit
+
 package config
 
 import (
-	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
-
-var partialOverrideConfigFile = filepath.Join("testdata", "partial_override.yml")
-
-func TestLoad_ConfigFileOverride(t *testing.T) {
-	clearEnvironmentVariables(t)
-
-	cfg, err := Load(partialOverrideConfigFile)
-	require.NoError(t, err)
-
-	assert.Equal(t, "debug", cfg.Log.Level)
-}
-
-func TestLoad_EnvOverride(t *testing.T) {
-	clearEnvironmentVariables(t)
-
-	// overrides default
-	t.Setenv("ARCTIC_SERVER_ADDR", "4200")
-	// overrides config file value
-	t.Setenv("ARCTIC_LOG_LEVEL", "error")
-
-	cfg, err := Load(filepath.Join(partialOverrideConfigFile))
-	require.NoError(t, err)
-
-	assert.Equal(t, 4200, cfg.Server.Addr)
-	assert.Equal(t, "error", cfg.Log.Level)
-}
 
 func TestDSN(t *testing.T) {
 	tests := []struct {
@@ -76,6 +50,42 @@ func TestDSN(t *testing.T) {
 			},
 			expected: "postgres://admin:p@ssw0rd!@127.0.0.1:5432/prod?sslmode=verify-full",
 		},
+		{
+			name: "password with URL-unsafe characters",
+			config: DatasourceConfig{
+				Username: "app_user",
+				Password: "p@ss:w/rd#123",
+				Host:     "db.internal",
+				Port:     5432,
+				DbName:   "app_db",
+				Sslmode:  "require",
+			},
+			expected: "postgres://app_user:p@ss:w/rd#123@db.internal:5432/app_db?sslmode=require",
+		},
+		{
+			name: "ipv6 host",
+			config: DatasourceConfig{
+				Username: "user",
+				Password: "pass",
+				Host:     "::1",
+				Port:     5432,
+				DbName:   "testdb",
+				Sslmode:  "disable",
+			},
+			expected: "postgres://user:pass@::1:5432/testdb?sslmode=disable",
+		},
+		{
+			name: "ipv6 host with brackets",
+			config: DatasourceConfig{
+				Username: "user",
+				Password: "pass",
+				Host:     "[2001:db8::1]",
+				Port:     5432,
+				DbName:   "testdb",
+				Sslmode:  "require",
+			},
+			expected: "postgres://user:pass@[2001:db8::1]:5432/testdb?sslmode=require",
+		},
 	}
 
 	for _, tt := range tests {
@@ -85,12 +95,4 @@ func TestDSN(t *testing.T) {
 			assert.Equal(t, expected, actual)
 		})
 	}
-}
-
-func clearEnvironmentVariables(t *testing.T) {
-	// only clear environment variables that are optional / have defaults
-	// so the tests don't break
-	t.Helper()
-	t.Setenv("ARCTIC_LOG_LEVEL", "")
-	t.Setenv("ARCTIC_SERVER_ADDR", "")
 }

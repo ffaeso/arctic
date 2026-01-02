@@ -15,7 +15,8 @@ export ARCTIC_DATASOURCE_PORT ?= 5432
 export ARCTIC_DATASOURCE_DBNAME ?= arctic_db
 export ARCTIC_DATASOURCE_SSLMODE ?= disable
 
-# hot path -> spins up dependencies (postgres) via 
+
+##@ Building
 # docker compose + runs arctic start
 .PHONY: dev
 dev: deps-up
@@ -31,19 +32,35 @@ build:
 run: build
 	./bin/arctic start
 
-# standard test with coverage
+
+
+
+
+##@ Testing
 .PHONY: test
 test:
-	go test ./... -v -cover
+	go test ./... -v -cover -tags=integration,unit
 
-# for seeing html visualisation of whats covered and whats not
+# for seeing html visualisation of coverage
 .PHONY: cover
 cover:
-	go test ./... -coverprofile=coverage.out
+	go test ./... -coverprofile=coverage.out -tags=integration,unit
 	go tool cover -html=coverage.out
 	rm coverage.out
 
-# stops running containers, removes it, and remove the volume
+.PHONY: test-unit
+test-unit:
+	go test ./... -v -cover -tags=unit
+
+.PHONY: test-integration
+test-integration:
+	go test ./... -v -cover -tags=integration
+
+
+
+
+
+##@ Dependencies & Cleanup
 .PHONY: clean
 clean:
 	rm -rf bin/
@@ -66,21 +83,26 @@ deps-up:
 deps-down:
 	docker compose -f build/docker-compose.dev.yml down
 
-# help menu
+
+
+
+##@ Help Menu
 .PHONY: help
 help:
 	@echo "Arctic Development Makefile"
 	@echo ""
 	@echo "Usage:"
-	@echo "  make dev         - Start dependencies and run Arctic (hot path for development)"
-	@echo "  make build       - Build Arctic binary"
-	@echo "  make run         - Build and run Arctic binary"
-	@echo "  make test        - Run tests with coverage"
-	@echo "  make cover       - Generate HTML coverage report"
-	@echo "  make deps-up     - Start dependencies (PostgreSQL) in Docker"
-	@echo "  make deps-down   - Stop dependencies"
-	@echo "  make deps-logs   - Show dependency logs"
-	@echo "  make clean       - Clean build artifacts and stop all containers"
+	@echo "  make dev              - Start dependencies and run Arctic (hot path for development)"
+	@echo "  make build            - Build Arctic binary"
+	@echo "  make run              - Build and run Arctic binary"
+	@echo "  make test             - Run all tests (unit + integration) with coverage"
+	@echo "  make test-unit        - Run unit tests only"
+	@echo "  make test-integration - Run integration tests only"
+	@echo "  make cover            - Generate HTML coverage report"
+	@echo "  make deps-up          - Start dependencies (PostgreSQL) in Docker"
+	@echo "  make deps-down        - Stop dependencies"
+	@echo "  make deps-logs        - Show dependency logs"
+	@echo "  make clean            - Clean build artifacts and stop all containers"
 	@echo ""
 	@echo "Environment variables can be overridden:"
 	@echo "  ARCTIC_LOG_LEVEL=warn make dev"
