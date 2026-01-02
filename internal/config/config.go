@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -19,8 +20,9 @@ const (
 )
 
 type Config struct {
-	Server ServerConfig `mapstructure:"server" validate:"required"`
-	Log    LogConfig    `mapstructure:"log" validate:"required"`
+	Server     ServerConfig     `mapstructure:"server" validate:"required"`
+	Log        LogConfig        `mapstructure:"log" validate:"required"`
+	Datasource PostgresDbConfig `mapstructure:"datasource" validate:"required"`
 }
 
 type ServerConfig struct {
@@ -30,6 +32,27 @@ type ServerConfig struct {
 type LogConfig struct {
 	Level  string `mapstructure:"level" validate:"required,oneof=debug info warn error"`
 	Format string `mapstructure:"format" validate:"required,oneof=json text"`
+}
+
+// dsnExample := "postgres://username:password@localhost:5432/database_name&sslmode=required"
+type PostgresDbConfig struct {
+	Username string `mapstructure:"username" validate:"required"`
+	Password string `mapstructure:"password" validate:"required"`
+	Host     string `mapstructure:"host" validate:"required,hostname|ip"`
+	Port     int    `mapstructure:"port" validate:"required,min=1,max=65535"`
+	DbName   string `mapstructure:"dbname" validate:"required"`
+	Sslmode  string `mapstructure:"sslmode" validate:"required,oneof=disable require verify-ca verify-full"`
+}
+
+func (p *PostgresDbConfig) DSN() string {
+	return fmt.Sprintf("postgres://%v:%v@%v:%v/%v&sslmode=%v",
+		p.Username,
+		p.Password,
+		p.Host,
+		p.Port,
+		p.DbName,
+		p.Sslmode,
+	)
 }
 
 // Load loads the static configuration required to start Arctic.
@@ -42,7 +65,7 @@ type LogConfig struct {
 //
 // Configuration values are resolved in order of precedence (highest to lowest):
 //
-//  1. Environment variables (ARCTIC_SERVER_PORT, ARCTIC_LOG_LEVEL, etc.)
+//  1. Environment variables (ARCTIC_SERVER_ADDR, ARCTIC_LOG_LEVEL, etc.)
 //  2. Config file
 //  3. Built-in defaults
 func Load(configPath string) (*Config, error) {
@@ -51,14 +74,14 @@ func Load(configPath string) (*Config, error) {
 	envOverride(vip)
 
 	if configPath != "" {
-		viper.SetConfigFile(configPath)
+		vip.SetConfigFile(configPath)
 	} else {
-		viper.SetConfigName("config")
-		viper.AddConfigPath("/etc/arctic")
-		viper.AddConfigPath("$HOME/.arctic")
+		vip.SetConfigName("config")
+		vip.AddConfigPath("/etc/arctic")
+		vip.AddConfigPath("$HOME/.arctic")
 	}
 
-	if err := viper.ReadInConfig(); err != nil {
+	if err := vip.ReadInConfig(); err != nil {
 		var fileNotFoundErr viper.ConfigFileNotFoundError
 		if !errors.As(err, &fileNotFoundErr) {
 			return nil, err
@@ -66,7 +89,7 @@ func Load(configPath string) (*Config, error) {
 	}
 
 	var cfg Config
-	if err := viper.Unmarshal(&cfg); err != nil {
+	if err := vip.Unmarshal(&cfg); err != nil {
 		return nil, err
 	}
 
@@ -78,17 +101,17 @@ func Load(configPath string) (*Config, error) {
 	return &cfg, nil
 }
 
-func setDefaults(_ *viper.Viper) {
+func setDefaults(v *viper.Viper) {
 	// server defaults
-	viper.SetDefault("server.addr", DefaultHttpAddr)
+	v.SetDefault("server.addr", DefaultHttpAddr)
 
 	// logger defaults
-	viper.SetDefault("log.level", DefaultLogLevel)
-	viper.SetDefault("log.format", DefaultLogFormat)
+	v.SetDefault("log.level", DefaultLogLevel)
+	v.SetDefault("log.format", DefaultLogFormat)
 }
 
-func envOverride(_ *viper.Viper) {
-	viper.SetEnvPrefix("ARCTIC")
-	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-	viper.AutomaticEnv()
+func envOverride(v *viper.Viper) {
+	v.SetEnvPrefix("ARCTIC")
+	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	v.AutomaticEnv()
 }
