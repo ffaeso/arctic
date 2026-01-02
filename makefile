@@ -15,11 +15,11 @@ dev: deps-up
 
 .PHONY: build
 build:
-	go build -o arctic ./cmd/arctic
+	go build -o ./bin/arctic ./cmd/arctic
 
 .PHONY: run
 run: build
-	./arctic start
+	./bin/arctic start
 
 .PHONY: deps-up
 deps-up:
@@ -49,7 +49,7 @@ cover:
 
 .PHONY: clean
 clean:
-	rm -f arctic
+	rm -f bin/
 	docker compose -f build/docker-compose.dev.yml down -v
 
 .PHONY: help
