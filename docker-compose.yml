@@ -1,9 +1,0 @@
-services:
-  arctic:
-    build: .
-    ports:
-      - "9726:9726"
-    environment:
-      - ARCTIC_SERVER_ADDR=9722
-      - ARCTIC_LOG_FORMAT=text
-      - ARCTIC_LOG_LEVEL=debug
