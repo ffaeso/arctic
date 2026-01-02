@@ -31,23 +31,6 @@ build:
 run: build
 	./bin/arctic start
 
-# spins up dependencies
-.PHONY: deps-up
-deps-up:
-	@docker compose -f build/docker-compose.dev.yml up -d
-	@echo "Waiting for PostgreSQL to be ready..."
-	@sleep 2
-
-# stops the running dependencies
-.PHONY: deps-down
-deps-down:
-	docker compose -f build/docker-compose.dev.yml down
-
-# run this to see logs coming from docker compose 
-.PHONY: deps-logs
-deps-logs:
-	docker compose -f build/docker-compose.dev.yml logs -f
-
 # standard test with coverage
 .PHONY: test
 test:
@@ -63,8 +46,25 @@ cover:
 # stops running containers, removes it, and remove the volume
 .PHONY: clean
 clean:
-	rm -f bin/
+	rm -rf bin/
 	docker compose -f build/docker-compose.dev.yml down -v
+
+# run this to see logs coming from docker compose 
+.PHONY: deps-logs
+deps-logs:
+	docker compose -f build/docker-compose.dev.yml logs -f
+
+# spins up dependencies
+.PHONY: deps-up
+deps-up:
+	@docker compose -f build/docker-compose.dev.yml up -d
+	@echo "Waiting for PostgreSQL to be ready..."
+	@sleep 2
+
+# stops the running dependencies
+.PHONY: deps-down
+deps-down:
+	docker compose -f build/docker-compose.dev.yml down
 
 # help menu
 .PHONY: help
