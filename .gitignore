@@ -27,6 +27,9 @@ go.work.sum
 # env file
 .env
 
+# Arctic binary
+arctic
+
 # Editor/IDE
 # .idea/
 # .vscode/
