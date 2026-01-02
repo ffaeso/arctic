@@ -22,7 +22,7 @@ const (
 type Config struct {
 	Server     ServerConfig     `mapstructure:"server" validate:"required"`
 	Log        LogConfig        `mapstructure:"log" validate:"required"`
-	Datasource PostgresDbConfig `mapstructure:"datasource" validate:"required"`
+	Datasource DatasourceConfig `mapstructure:"datasource" validate:"required"`
 }
 
 type ServerConfig struct {
@@ -34,8 +34,7 @@ type LogConfig struct {
 	Format string `mapstructure:"format" validate:"required,oneof=json text"`
 }
 
-// dsnExample := "postgres://username:password@localhost:5432/database_name&sslmode=required"
-type PostgresDbConfig struct {
+type DatasourceConfig struct {
 	Username string `mapstructure:"username" validate:"required"`
 	Password string `mapstructure:"password" validate:"required"`
 	Host     string `mapstructure:"host" validate:"required,hostname|ip"`
@@ -44,8 +43,9 @@ type PostgresDbConfig struct {
 	Sslmode  string `mapstructure:"sslmode" validate:"required,oneof=disable require verify-ca verify-full"`
 }
 
-func (p *PostgresDbConfig) DSN() string {
-	return fmt.Sprintf("postgres://%v:%v@%v:%v/%v&sslmode=%v",
+func (p *DatasourceConfig) DSN() string {
+	// dsnExample := "postgres://username:password@localhost:5432/database_name?sslmode=required"
+	return fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=%s",
 		p.Username,
 		p.Password,
 		p.Host,
@@ -108,10 +108,23 @@ func setDefaults(v *viper.Viper) {
 	// logger defaults
 	v.SetDefault("log.level", DefaultLogLevel)
 	v.SetDefault("log.format", DefaultLogFormat)
+
+	// datasource defaults - empty values for required fields, reasonable defaults for operational settings
+	v.SetDefault("datasource.username", "")
+	v.SetDefault("datasource.password", "")
+	v.SetDefault("datasource.host", "")
+	v.SetDefault("datasource.port", 5432)
+	v.SetDefault("datasource.dbname", "")
+	v.SetDefault("datasource.sslmode", "require")
 }
 
 func envOverride(v *viper.Viper) {
 	v.SetEnvPrefix("ARCTIC")
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	v.AutomaticEnv()
+
+	// bind all registered keys to environment variables
+	for _, key := range v.AllKeys() {
+		v.BindEnv(key)
+	}
 }
