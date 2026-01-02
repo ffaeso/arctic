@@ -12,11 +12,18 @@ import (
 const (
 	// general
 	ApplicationName = "Arctic"
+	DefaultEmpty    = ""
 
-	// defaults
-	DefaultHttpAddr  = 9726
+	// server defaults
+	DefaultHttpAddr = 9726
+
+	// logger defaults
 	DefaultLogFormat = "json"
 	DefaultLogLevel  = "info"
+
+	// datasource defaults
+	DefaultDatasourcePort = 5432
+	DefaultSSLMode        = "require"
 )
 
 type Config struct {
@@ -109,13 +116,14 @@ func setDefaults(v *viper.Viper) {
 	v.SetDefault("log.level", DefaultLogLevel)
 	v.SetDefault("log.format", DefaultLogFormat)
 
-	// datasource defaults - empty values for required fields, reasonable defaults for operational settings
-	v.SetDefault("datasource.username", "")
-	v.SetDefault("datasource.password", "")
-	v.SetDefault("datasource.host", "")
-	v.SetDefault("datasource.port", 5432)
-	v.SetDefault("datasource.dbname", "")
-	v.SetDefault("datasource.sslmode", "require")
+	// datasource defaults - empty values for required fields,
+	// reasonable defaults for operational settings
+	v.SetDefault("datasource.username", DefaultEmpty)
+	v.SetDefault("datasource.password", DefaultEmpty)
+	v.SetDefault("datasource.host", DefaultEmpty)
+	v.SetDefault("datasource.port", DefaultDatasourcePort)
+	v.SetDefault("datasource.dbname", DefaultEmpty)
+	v.SetDefault("datasource.sslmode", DefaultSSLMode)
 }
 
 func envOverride(v *viper.Viper) {
