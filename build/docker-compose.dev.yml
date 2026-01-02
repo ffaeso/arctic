@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_USER: arctic
       POSTGRES_PASSWORD: arctic
-      POSTGRES_DB: arctic_dev
+      POSTGRES_DB: arctic_db
     ports:
       - "5432:5432"
     volumes:

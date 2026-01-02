@@ -1,12 +1,18 @@
 # Development environment variables (safe for local dev)
+#
+# NOTE: These environment variables using makefile has 
+# precendence over /etc/arctic/config.yml or ~/.arctic/config.yml.
+# If running development environment using makefile, 
+# make sure to modify configurations down below instead of 
+# using config.yml
 export ARCTIC_SERVER_ADDR ?= 9726
 export ARCTIC_LOG_LEVEL ?= debug
 export ARCTIC_LOG_FORMAT ?= text
 export ARCTIC_DATASOURCE_USERNAME ?= arctic
-export ARCTIC_DATASOURCE_PASSWORD ?= arctic_dev
+export ARCTIC_DATASOURCE_PASSWORD ?= arctic
 export ARCTIC_DATASOURCE_HOST ?= localhost
 export ARCTIC_DATASOURCE_PORT ?= 5432
-export ARCTIC_DATASOURCE_DBNAME ?= arctic_dev
+export ARCTIC_DATASOURCE_DBNAME ?= arctic_db
 export ARCTIC_DATASOURCE_SSLMODE ?= disable
 
 # hot path -> spins up dependencies (postgres) via 
@@ -25,17 +31,19 @@ build:
 run: build
 	./bin/arctic start
 
-# spins up dependencies (postgres)
+# spins up dependencies
 .PHONY: deps-up
 deps-up:
 	@docker compose -f build/docker-compose.dev.yml up -d
 	@echo "Waiting for PostgreSQL to be ready..."
 	@sleep 2
 
+# stops the running dependencies
 .PHONY: deps-down
 deps-down:
 	docker compose -f build/docker-compose.dev.yml down
 
+# run this to see logs coming from docker compose 
 .PHONY: deps-logs
 deps-logs:
 	docker compose -f build/docker-compose.dev.yml logs -f
