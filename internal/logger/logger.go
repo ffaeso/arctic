@@ -7,8 +7,13 @@ import (
 	"github.com/ffaeso/arctic/internal/config"
 )
 
+// New creates and returns a new *slog.Logger instance
+// with settings based on the loggerConfig passed in.
+//
+// At the moment this supports log formats [text | json]
+// and logging level [debug | info | warn | error]
 func New(loggerConfig *config.LogConfig) *slog.Logger {
-	// change log level text from config to slog.Level
+	// convert log level text from config to slog.Level
 	var level slog.Level
 	level.UnmarshalText([]byte(loggerConfig.Level))
 
