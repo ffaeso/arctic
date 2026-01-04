@@ -16,22 +16,22 @@ import (
 //
 // Returns an error if the connection cannot be established or the database is unreachable.
 func NewPostgresPool(cfg *config.DatasourceConfig) (*sql.DB, error) {
-	conn, err := sql.Open("pgx", cfg.DSN())
+	pool, err := sql.Open("pgx", cfg.DSN())
 	if err != nil {
 		return nil, err
 	}
 
 	// pool configurations - we are keeping it generic right now
 	// without configuration options unless requested
-	conn.SetMaxOpenConns(25)
-	conn.SetMaxIdleConns(5)
-	conn.SetConnMaxLifetime(5 * time.Minute)
-	conn.SetConnMaxIdleTime(1 * time.Minute)
+	pool.SetMaxOpenConns(25)
+	pool.SetMaxIdleConns(5)
+	pool.SetConnMaxLifetime(5 * time.Minute)
+	pool.SetConnMaxIdleTime(1 * time.Minute)
 
-	if err := conn.Ping(); err != nil {
-		conn.Close()
+	if err := pool.Ping(); err != nil {
+		pool.Close()
 		return nil, fmt.Errorf("failed to connect to PostgreSQL database: %w", err)
 	}
 
-	return conn, err
+	return pool, err
 }
