@@ -2,8 +2,8 @@ package start
 
 import (
 	"github.com/ffaeso/arctic/internal/cliutils"
-	"github.com/ffaeso/arctic/internal/database"
 	"github.com/ffaeso/arctic/internal/logger"
+	"github.com/ffaeso/arctic/internal/persistence"
 	"github.com/ffaeso/arctic/internal/server"
 	"github.com/spf13/cobra"
 )
@@ -24,12 +24,15 @@ func NewCommand() *cobra.Command {
 			l.Info("loaded config", "config", cfg)
 
 			// database connection
-			conn, err := database.NewPostgresPool(&cfg.Datasource)
+			conn, err := persistence.NewPostgresPool(&cfg.Datasource)
 			if err != nil {
 				return err
 			}
 			defer conn.Close()
 			l.Info("successfully connected to database", "dsn", cfg.Datasource.DSN())
+
+			// attempt to run migrations
+			// TODO:
 
 			// instantiate server
 			srv := server.New(
