@@ -18,6 +18,9 @@ export ARCTIC_DATASOURCE_SSLMODE ?= disable
 
 ##@ Building
 # docker compose + runs arctic start
+# NOTE: This does not stop running dev dependencies from docker compose.
+# You would have to either do `make deps-down` to stop running compose or 
+# `make clean` which also removes the volumes (database data)
 .PHONY: dev
 dev: deps-up
 	go run ./cmd/arctic start
