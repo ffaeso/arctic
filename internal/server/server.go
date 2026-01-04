@@ -17,7 +17,7 @@ type Server struct {
 	// server port
 	Addr int
 
-	// multiplexer and loggers
+	// multiplexer and logger
 	Mux    http.Handler
 	Logger *slog.Logger
 }
