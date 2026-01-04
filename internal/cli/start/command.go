@@ -24,15 +24,19 @@ func NewCommand() *cobra.Command {
 			l.Info("loaded config", "config", cfg)
 
 			// database connection
-			conn, err := persistence.NewPostgresPool(&cfg.Datasource)
+			pool, err := persistence.NewPostgresPool(&cfg.Datasource)
 			if err != nil {
 				return err
 			}
-			defer conn.Close()
+			defer pool.Close()
 			l.Info("successfully connected to database", "dsn", cfg.Datasource.DSN())
 
-			// attempt to run migrations
-			// TODO:
+			// run migrations
+			l.Info("running database migrations")
+			if err := persistence.RunMigrations(pool); err != nil {
+				return err
+			}
+			l.Info("migrations complete")
 
 			// instantiate server
 			srv := server.New(
