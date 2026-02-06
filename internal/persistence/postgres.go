@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ffaeso/arctic/internal/config"
+	"github.com/fraeso/arctic/internal/config"
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 

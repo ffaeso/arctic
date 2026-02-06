@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ffaeso/arctic/internal/config"
+	"github.com/fraeso/arctic/internal/config"
 	"github.com/spf13/cobra"
 )
 

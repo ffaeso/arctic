@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/ffaeso/arctic/internal/config"
+	"github.com/fraeso/arctic/internal/config"
 )
 
 // New creates and returns a new *slog.Logger instance

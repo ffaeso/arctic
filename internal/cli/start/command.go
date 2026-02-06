@@ -1,10 +1,10 @@
 package start
 
 import (
-	"github.com/ffaeso/arctic/internal/cliutils"
-	"github.com/ffaeso/arctic/internal/logger"
-	"github.com/ffaeso/arctic/internal/persistence"
-	"github.com/ffaeso/arctic/internal/server"
+	"github.com/fraeso/arctic/internal/cliutils"
+	"github.com/fraeso/arctic/internal/logger"
+	"github.com/fraeso/arctic/internal/persistence"
+	"github.com/fraeso/arctic/internal/server"
 	"github.com/spf13/cobra"
 )
 

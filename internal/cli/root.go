@@ -3,9 +3,9 @@ package cli
 import (
 	"os"
 
-	"github.com/ffaeso/arctic/internal/cli/start"
-	"github.com/ffaeso/arctic/internal/cliutils"
-	"github.com/ffaeso/arctic/internal/config"
+	"github.com/fraeso/arctic/internal/cli/start"
+	"github.com/fraeso/arctic/internal/cliutils"
+	"github.com/fraeso/arctic/internal/config"
 	"github.com/spf13/cobra"
 )
 

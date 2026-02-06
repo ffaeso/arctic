@@ -3,7 +3,7 @@ package health
 import (
 	"net/http"
 
-	"github.com/ffaeso/arctic/internal/api/response"
+	"github.com/fraeso/arctic/internal/api/response"
 )
 
 type PingResponse struct {

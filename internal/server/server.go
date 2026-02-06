@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/ffaeso/arctic/internal/config"
+	"github.com/fraeso/arctic/internal/config"
 )
 
 type Server struct {

@@ -1,4 +1,4 @@
-module github.com/ffaeso/arctic
+module github.com/fraeso/arctic
 
 go 1.25.5
 

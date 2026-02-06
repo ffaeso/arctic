@@ -1,6 +1,6 @@
 package main
 
-import "github.com/ffaeso/arctic/internal/cli"
+import "github.com/fraeso/arctic/internal/cli"
 
 func main() {
 	cli.Execute()

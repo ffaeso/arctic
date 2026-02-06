@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/ffaeso/arctic/internal/api/http/health"
+	"github.com/fraeso/arctic/internal/api/http/health"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/httplog/v3"
